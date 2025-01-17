@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends 
-from typing import Annotated
+from typing import Annotated, List
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from database import SessionLocal, engine
@@ -42,6 +42,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 models.Base.metadata.create_all(bind=engine)
 
+#Database Endpoints 
 @app.post("/user/", response_model=UserModel)
 async def create_user(user: UserBase, db: db_dependency):
     db_user = models.User(**user.dict())
@@ -49,3 +50,8 @@ async def create_user(user: UserBase, db: db_dependency):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+@app.get("/users/", response_model=list[UserModel])
+async def read_users(db: db_dependency):
+    users = db.query(models.User).all()
+    return users
