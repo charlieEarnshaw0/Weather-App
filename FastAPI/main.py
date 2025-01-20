@@ -43,6 +43,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 models.Base.metadata.create_all(bind=engine)
 
 #Database Endpoints 
+#Create User
 @app.post("/user/", response_model=UserModel)
 async def create_user(user: UserBase, db: db_dependency):
     db_user = models.User(**user.dict())
@@ -51,6 +52,7 @@ async def create_user(user: UserBase, db: db_dependency):
     db.refresh(db_user)
     return db_user
 
+#get all users 
 @app.get("/users/", response_model=list[UserModel])
 async def read_users(db: db_dependency):
     users = db.query(models.User).all()
