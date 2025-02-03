@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    "http://localhost"
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -43,8 +43,9 @@ db_dependency = Annotated[Session, Depends(get_db)]
 models.Base.metadata.create_all(bind=engine)
 
 #Database Endpoints 
+
 #Create User
-@app.post("/user/", response_model=UserModel)
+@app.post("/users/", response_model=UserModel)
 async def create_user(user: UserBase, db: db_dependency):
     db_user = models.User(**user.dict())
     db.add(db_user)
@@ -57,3 +58,4 @@ async def create_user(user: UserBase, db: db_dependency):
 async def read_users(db: db_dependency):
     users = db.query(models.User).all()
     return users
+
