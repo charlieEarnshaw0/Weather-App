@@ -8,15 +8,16 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# Allows for React to connect to FastAPI
 origins = [
     "http://localhost:3000",
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
 )
 
+#create pydantic models for User to validate requests and responses
 class UserBase(BaseModel):
     email: str
     username: str
