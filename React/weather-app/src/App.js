@@ -1,18 +1,38 @@
 import React, { useState, useEffect } from "react";
 import api from "./api";
+const App = ({ city = "Wellington" }) => {
+  //Debug
+  const [weatherApiSaved, setWeatherApiSaved] = useState(true); //saves weather data in local host rather than calling the api again
 
-const App = () => {
   const [weather, setWeather] = useState(null);
 
   useEffect(() => {
-    const savedWeather = localStorage.getItem("weather");
-    if (savedWeather) {
-      setWeather(JSON.parse(savedWeather));
-    } else {
-      api.get("/weather/Paris").then((response) => {
+    const fetchWeatherFromApi = async () => {
+      try {
+        const response = await api.get(`/weather/${city}`);
         setWeather(response.data);
         localStorage.setItem("weather", JSON.stringify(response.data));
-      });
+        console.log("Fetching weather data from api...");
+      } catch (error) {
+        console.error("Error fetching weather data from API:", error);
+      }
+    };
+
+    const savedWeather = localStorage.getItem("weather");
+    if (weatherApiSaved && savedWeather) {
+      const parsedWeather = JSON.parse(savedWeather);
+      console.log(parsedWeather);
+      if (
+        !parsedWeather.error &&
+        parsedWeather.location.name.toLowerCase() === city.toLowerCase()
+      ) {
+        setWeather(parsedWeather);
+        console.log("Fetching weather data from local host...");
+      } else {
+        fetchWeatherFromApi();
+      }
+    } else {
+      fetchWeatherFromApi();
     }
   }, []);
 

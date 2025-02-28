@@ -17,4 +17,10 @@ def getCurrentWeather(city):
     conn.request("GET", f"/current.json?q={city}", headers=headers)
     res = conn.getresponse()
     data = res.read()
-    return json.loads(data.decode("utf-8"))
+    
+    if res.status != 200:
+        raise Exception(f"API call failed with status code {res.status}: {data.decode('utf-8')}")
+    
+    output = json.loads(data.decode("utf-8"))
+
+    return output
