@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
+import { Link } from "react-router-dom";
 
 const CityWeather = () => {
   const [weatherApiSaved, setWeatherApiSaved] = useState(true); //saves weather data in local host rather than calling the api again. For optimisation purposes.
@@ -97,9 +98,6 @@ const CityWeather = () => {
       )}
       <CityForm />
       {showError && <p style={{ color: "red" }}>Error fetching weather data</p>}
-      <h2>
-        <a href="/">Go to Home</a>
-      </h2>
     </div>
   );
 };
