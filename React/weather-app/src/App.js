@@ -1,10 +1,33 @@
 import React, { useState, useEffect } from "react";
 import api from "./api";
-const App = ({ city = "Wellington" }) => {
-  //Debug
-  const [weatherApiSaved, setWeatherApiSaved] = useState(true); //saves weather data in local host rather than calling the api again
+
+const App = () => {
+  const [weatherApiSaved, setWeatherApiSaved] = useState(true); //saves weather data in local host rather than calling the api again. For optimisation purposes.
 
   const [weather, setWeather] = useState(null);
+  const [city, setCity] = useState("");
+  const [showError, setShowError] = useState(false);
+
+  const CityForm = () => {
+    const [cityInput, setCityInput] = useState(city); //the value of the input field. NOT the current city
+
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      console.log("Country submitted:", cityInput);
+      setCity(cityInput); //Only set city on submission
+    };
+
+    return (
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={cityInput}
+          onChange={(event) => setCityInput(event.target.value)}
+        />
+        <button type="submit">Submit</button>
+      </form>
+    );
+  };
 
   useEffect(() => {
     const fetchWeatherFromApi = async () => {
@@ -15,16 +38,19 @@ const App = ({ city = "Wellington" }) => {
         console.log("Fetching weather data from api...");
       } catch (error) {
         console.error("Error fetching weather data from API:", error);
+        setShowError(true);
       }
     };
 
+    setShowError(false);
     const savedWeather = localStorage.getItem("weather");
     if (weatherApiSaved && savedWeather) {
       const parsedWeather = JSON.parse(savedWeather);
       console.log(parsedWeather);
       if (
         !parsedWeather.error &&
-        parsedWeather.location.name.toLowerCase() === city.toLowerCase()
+        (parsedWeather.location.name.toLowerCase() === city.toLowerCase() ||
+          city === "")
       ) {
         setWeather(parsedWeather);
         console.log("Fetching weather data from local host...");
@@ -34,7 +60,7 @@ const App = ({ city = "Wellington" }) => {
     } else {
       fetchWeatherFromApi();
     }
-  }, []);
+  }, [city]);
 
   return (
     <div>
@@ -64,10 +90,13 @@ const App = ({ city = "Wellington" }) => {
             Visibility: {weather.current.vis_km} km ({weather.current.vis_miles}{" "}
             miles)
           </p>
+          <p>Time: {weather.current.last_updated} </p>
         </div>
       ) : (
         <p>Loading...</p>
       )}
+      <CityForm />
+      {showError && <p style={{ color: "red" }}>Error fetching weather data</p>}
     </div>
   );
 };
