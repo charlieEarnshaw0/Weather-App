@@ -2,75 +2,52 @@ import React, { useState, useEffect } from "react";
 import api from "./api";
 
 const App = () => {
-  const [user, setUsers] = useState([]);
-  const [userData, setUserData] = useState({
-    id: -1,
-    email: "",
-    username: "",
-    first_name: "",
-    last_name: "",
-    hashed_password: "",
-    is_active: true,
-  });
-
-  const fetchUsers = async () => {
-    const response = await api.get("/users/");
-    setUsers(response.data);
-  };
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
+    const savedWeather = localStorage.getItem("weather");
+    if (savedWeather) {
+      setWeather(JSON.parse(savedWeather));
+    } else {
+      api.get("/weather/Paris").then((response) => {
+        setWeather(response.data);
+        localStorage.setItem("weather", JSON.stringify(response.data));
+      });
+    }
   }, []);
-
-  const handleInputChange = (event) => {
-    const value =
-      event.target.type === "checkbox"
-        ? event.target.checked
-        : event.target.value;
-    setUserData({ ...userData, [event.target.email]: value });
-  };
-
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    await api.post("/users", userData);
-    fetchUsers();
-    setUserData({
-      id: -1,
-      email: "",
-      username: "",
-      first_name: "",
-      last_name: "",
-      hashed_password: "",
-      is_active: true,
-    });
-  };
 
   return (
     <div>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Username</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Active</th>
-          </tr>
-        </thead>
-        <tbody>
-          {user.map((user) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.email}</td>
-              <td>{user.username}</td>
-              <td>{user.first_name}</td>
-              <td>{user.last_name}</td>
-              <td>{user.is_active ? "Yes" : "No"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {weather ? (
+        <div>
+          <h1>
+            Weather in {weather.location.name}, {weather.location.country}
+          </h1>
+          <p>
+            Temperature: {weather.current.temp_c}°C ({weather.current.temp_f}°F)
+          </p>
+          <p>Condition: {weather.current.condition.text}</p>
+          <img
+            src={weather.current.condition.icon}
+            alt={weather.current.condition.text}
+          />
+          <p>
+            Wind: {weather.current.wind_kph} kph ({weather.current.wind_mph}{" "}
+            mph) {weather.current.wind_dir}
+          </p>
+          <p>Humidity: {weather.current.humidity}%</p>
+          <p>
+            Pressure: {weather.current.pressure_mb} mb (
+            {weather.current.pressure_in} in)
+          </p>
+          <p>
+            Visibility: {weather.current.vis_km} km ({weather.current.vis_miles}{" "}
+            miles)
+          </p>
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 };
