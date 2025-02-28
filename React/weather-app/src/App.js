@@ -6,6 +6,7 @@ const App = () => {
 
   const [weather, setWeather] = useState(null);
   const [city, setCity] = useState("");
+  const [showError, setShowError] = useState(false);
 
   const CityForm = () => {
     const [cityInput, setCityInput] = useState(city); //the value of the input field. NOT the current city
@@ -37,9 +38,11 @@ const App = () => {
         console.log("Fetching weather data from api...");
       } catch (error) {
         console.error("Error fetching weather data from API:", error);
+        setShowError(true);
       }
     };
 
+    setShowError(false);
     const savedWeather = localStorage.getItem("weather");
     if (weatherApiSaved && savedWeather) {
       const parsedWeather = JSON.parse(savedWeather);
@@ -93,6 +96,7 @@ const App = () => {
         <p>Loading...</p>
       )}
       <CityForm />
+      {showError && <p style={{ color: "red" }}>Error fetching weather data</p>}
     </div>
   );
 };
