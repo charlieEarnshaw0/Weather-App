@@ -1,6 +1,6 @@
 # Weather-App
 
-Written by Charles Earnshaw
+Written by Charlie Earnshaw
 
 This Application uses WeatherAPI.com (https://rapidapi.com/weatherapi/api/weatherapi-com) for api calls
 Free plan allows me 250 requests per day
