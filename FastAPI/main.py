@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from database import SessionLocal, engine
 import models
 from fastapi.middleware.cors import CORSMiddleware
+import weatherAPI
 
 app = FastAPI()
 
@@ -59,4 +60,9 @@ async def create_user(user: UserBase, db: db_dependency):
 async def read_users(db: db_dependency):
     users = db.query(models.User).all()
     return users
+
+#Querying weather API
+@app.get("/weather/{city}")
+async def get_weather(city: str):
+    return weatherAPI.getCurrentWeather(city)
 
