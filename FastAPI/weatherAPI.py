@@ -1,6 +1,7 @@
 #Accessing the weather API
 
 import http.client
+import json
 
 try:
     from credentials import rapid_api_key
@@ -16,4 +17,4 @@ def getCurrentWeather(city):
     conn.request("GET", f"/current.json?q={city}", headers=headers)
     res = conn.getresponse()
     data = res.read()
-    return data.decode("utf-8")
+    return json.loads(data.decode("utf-8"))
