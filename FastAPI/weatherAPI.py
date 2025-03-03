@@ -8,7 +8,7 @@ try:
 except ImportError:
     raise ImportError("Failed to import rapid_api_key from credentials. Please ensure the credentials.py file exists and contains the rapid_api_key variable.")
 
-def getCurrentWeather(city):
+def getCurrentWeather(city="Paris"):
     conn = http.client.HTTPSConnection("weatherapi-com.p.rapidapi.com")
     headers = {
         'x-rapidapi-key': rapid_api_key,
