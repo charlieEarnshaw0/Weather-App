@@ -13,6 +13,7 @@ const CityWeather = () => {
     const [cityInput, setCityInput] = useState(city); //the value of the input field. NOT the current city
 
     const handleSubmit = (event) => {
+      setWeather(null); //Clear weather data on submission
       event.preventDefault();
       console.log("Country submitted:", cityInput);
       setCity(cityInput); //Only set city on submission
@@ -30,6 +31,7 @@ const CityWeather = () => {
     );
   };
 
+  //Getting weather from API or local storage
   useEffect(() => {
     const fetchWeatherFromApi = async () => {
       try {
@@ -94,7 +96,7 @@ const CityWeather = () => {
           <p>Time: {weather.current.last_updated} </p>
         </div>
       ) : (
-        <p>Loading...</p>
+        <h1>Loading...</h1>
       )}
       <CityForm />
       {showError && <p style={{ color: "red" }}>Error fetching weather data</p>}
