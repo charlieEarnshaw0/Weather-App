@@ -35,28 +35,31 @@ const CityWeather = () => {
   useEffect(() => {
     const fetchWeatherFromApi = async () => {
       try {
+        console.log("Fetching weather data from api...");
+        console.log("City:", city);
         const response = await api.get(`/weather/${city}`);
         setWeather(response.data);
         localStorage.setItem("weather", JSON.stringify(response.data));
-        console.log("Fetching weather data from api...");
       } catch (error) {
         console.error("Error fetching weather data from API:", error);
         setShowError(true);
       }
     };
 
+    //Check local storage first
     setShowError(false);
     const savedWeather = localStorage.getItem("weather");
     if (weatherApiSaved && savedWeather) {
       const parsedWeather = JSON.parse(savedWeather);
       console.log(parsedWeather);
       if (
+        //Make sure local storage is not an error
         !parsedWeather.error &&
         (parsedWeather.location.name.toLowerCase() === city.toLowerCase() ||
           city === "")
       ) {
-        setWeather(parsedWeather);
         console.log("Fetching weather data from local host...");
+        setWeather(parsedWeather);
       } else {
         fetchWeatherFromApi();
       }
