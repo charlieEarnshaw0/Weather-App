@@ -4,6 +4,8 @@ import CityInfo from "./CityInfo";
 import CityForm from "./CityForm";
 
 const fetchWeatherFromApi = async (city, setShowError, setWeather) => {
+  setShowError(false);
+
   try {
     console.log("Fetching weather data from api...");
     console.log("City:", city);
@@ -29,7 +31,6 @@ const useWeather = (city, setWeather, setShowError, weatherApiSaved) => {
     setWeather(null); //Clear weather data to activate loading screen
 
     //Check local storage first
-    setShowError(false);
     const savedWeather = localStorage.getItem("weather");
     if (weatherApiSaved && savedWeather) {
       const parsedWeather = JSON.parse(savedWeather);
@@ -42,6 +43,7 @@ const useWeather = (city, setWeather, setShowError, weatherApiSaved) => {
       ) {
         console.log("Fetching weather data from local host...");
         setWeather(parsedWeather);
+        setShowError(false);
       } else {
         fetchWeatherFromApi(city, setShowError, setWeather);
       }
