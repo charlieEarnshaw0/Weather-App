@@ -7,9 +7,11 @@
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "cra-template": "1.2.0",
+    "leaflet": "^1.9.4",
     "node.js": "^0.0.1-security",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-leaflet": "^5.0.0",
     "react-scripts": "5.0.1",
     "weather-app": "file:",
     "web-vitals": "^4.2.4"
