@@ -2,7 +2,7 @@ const CityInfo = ({ weather, showError }) => {
   return (
     <div>
       {showError ? (
-        <h2>Weather in...</h2>
+        <h2 style={{ color: "red" }}> Error loading weather info</h2>
       ) : weather ? (
         <div>
           <h2>

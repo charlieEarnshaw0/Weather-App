@@ -63,7 +63,6 @@ const CityWeather = () => {
     <div>
       <CityInfo weather={weather} showError={showError} />
       <CityForm city={city} setCity={setCity} />
-      {showError && <p style={{ color: "red" }}>Error fetching weather data</p>}
     </div>
   );
 };
