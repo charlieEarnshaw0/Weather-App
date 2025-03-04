@@ -1,58 +1,32 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
-import { Link } from "react-router-dom";
+import CityInfo from "./CityInfo";
+import CityForm from "./CityForm";
 
-const CityWeather = () => {
-  const [weatherApiSaved, setWeatherApiSaved] = useState(true); //saves weather data in local host rather than calling the api again. For optimisation purposes.
+const fetchWeatherFromApi = async (city, setShowError, setWeather) => {
+  try {
+    console.log("Fetching weather data from api...");
+    console.log("City:", city);
+    const response = await api.get(`/weather/${city}`);
+    console.log("response.data: ", response.data);
 
-  const [weather, setWeather] = useState(null);
-  const [city, setCity] = useState("");
-  const [showError, setShowError] = useState(false);
+    if (response.data === null) {
+      setShowError(true);
+      throw new Error("Error fetching weather data from API");
+    } else {
+      setWeather(response.data);
+      localStorage.setItem("weather", JSON.stringify(response.data));
+    }
+  } catch (error) {
+    console.error("Error fetching weather data from API:", error);
+    setShowError(true);
+  }
+};
 
-  const CityForm = () => {
-    const [cityInput, setCityInput] = useState(city); //the value of the input field. NOT the current city
-
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      console.log("Country submitted:", cityInput);
-      setCity(cityInput); //Only set city on submission
-    };
-
-    return (
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={cityInput}
-          onChange={(event) => setCityInput(event.target.value)}
-        />
-        <button type="submit">Submit</button>
-      </form>
-    );
-  };
-
+const useWeather = (city, setWeather, setShowError, weatherApiSaved) => {
   //Getting weather from API or local storage
   useEffect(() => {
     setWeather(null); //Clear weather data to activate loading screen
-
-    const fetchWeatherFromApi = async () => {
-      try {
-        console.log("Fetching weather data from api...");
-        console.log("City:", city);
-        const response = await api.get(`/weather/${city}`);
-        console.log("response.data: ", response.data);
-
-        if (response.data === null) {
-          setShowError(true);
-          throw new Error("Error fetching weather data from API");
-        } else {
-          setWeather(response.data);
-          localStorage.setItem("weather", JSON.stringify(response.data));
-        }
-      } catch (error) {
-        console.error("Error fetching weather data from API:", error);
-        setShowError(true);
-      }
-    };
 
     //Check local storage first
     setShowError(false);
@@ -69,47 +43,28 @@ const CityWeather = () => {
         console.log("Fetching weather data from local host...");
         setWeather(parsedWeather);
       } else {
-        fetchWeatherFromApi();
+        fetchWeatherFromApi(city, setShowError, setWeather);
       }
     } else {
-      fetchWeatherFromApi();
+      fetchWeatherFromApi(city, setShowError, setWeather);
     }
   }, [city]);
+};
+
+const CityWeather = () => {
+  const [weatherApiSaved, setWeatherApiSaved] = useState(true); //saves weather data in local host rather than calling the api again. For optimisation purposes.
+
+  const [weather, setWeather] = useState(null);
+  const [city, setCity] = useState("");
+  const [showError, setShowError] = useState(false);
+
+  //Custom hook to fetch weather data
+  useWeather(city, setWeather, setShowError, weatherApiSaved);
 
   return (
     <div>
-      {weather ? (
-        <div>
-          <h1>
-            Weather in {weather.location.name}, {weather.location.country}
-          </h1>
-          <p>
-            Temperature: {weather.current.temp_c}°C ({weather.current.temp_f}°F)
-          </p>
-          <p>Condition: {weather.current.condition.text}</p>
-          <img
-            src={weather.current.condition.icon}
-            alt={weather.current.condition.text}
-          />
-          <p>
-            Wind: {weather.current.wind_kph} kph ({weather.current.wind_mph}{" "}
-            mph) {weather.current.wind_dir}
-          </p>
-          <p>Humidity: {weather.current.humidity}%</p>
-          <p>
-            Pressure: {weather.current.pressure_mb} mb (
-            {weather.current.pressure_in} in)
-          </p>
-          <p>
-            Visibility: {weather.current.vis_km} km ({weather.current.vis_miles}{" "}
-            miles)
-          </p>
-          <p>Time: {weather.current.last_updated} </p>
-        </div>
-      ) : (
-        <h1>Loading...</h1>
-      )}
-      <CityForm />
+      <CityInfo weather={weather} showError={showError} />
+      <CityForm city={city} setCity={setCity} />
       {showError && <p style={{ color: "red" }}>Error fetching weather data</p>}
     </div>
   );
