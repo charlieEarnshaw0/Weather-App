@@ -1,11 +1,12 @@
 import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import "../Styles/Layout.css";
 
 const Layout = () => {
   const location = useLocation(); //React state-aware hook that should re-render when the route changes
 
   return (
-    <div>
+    <div className="layout">
       <Outlet />
       {location.pathname !== "/" && (
         <h2>
