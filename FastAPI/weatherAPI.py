@@ -10,6 +10,9 @@ except ImportError:
 
 def getCurrentWeather(city): 
     try:
+        #replace spaces with dashes
+        city = city.replace(" ", "-")
+
         conn = http.client.HTTPSConnection("weatherapi-com.p.rapidapi.com")
         headers = {
             'x-rapidapi-key': rapid_api_key,
