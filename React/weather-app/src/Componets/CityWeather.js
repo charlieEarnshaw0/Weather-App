@@ -52,14 +52,12 @@ const useWeather = (city, setWeather, setShowError, weatherApiSaved) => {
 };
 
 const CityWeather = () => {
-  const [weatherApiSaved, setWeatherApiSaved] = useState(true); //saves weather data in local host rather than calling the api again. For optimisation purposes.
-
   const [weather, setWeather] = useState(null);
   const [city, setCity] = useState("");
   const [showError, setShowError] = useState(false);
 
   //Custom hook to fetch weather data
-  useWeather(city, setWeather, setShowError, weatherApiSaved);
+  useWeather(city, setWeather, setShowError, false); //false: saves weather data in local host rather than calling the api again. For optimisation purposes.
 
   return (
     <div>
@@ -71,3 +69,4 @@ const CityWeather = () => {
 };
 
 export default CityWeather;
+export { fetchWeatherFromApi, useWeather };
