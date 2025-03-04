@@ -24,6 +24,8 @@ def getCurrentWeather(city):
         
         output = json.loads(data.decode("utf-8"))
 
+        print(output)
+
         return output
     except Exception as e:
         output = {"error": str(e)}
