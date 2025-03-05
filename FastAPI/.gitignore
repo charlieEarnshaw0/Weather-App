@@ -5,3 +5,6 @@ __pycache__/
 *.db
 
 credentials.py
+
+venv/
+env/

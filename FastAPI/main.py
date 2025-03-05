@@ -61,8 +61,12 @@ async def read_users(db: db_dependency):
     users = db.query(models.User).all()
     return users
 
-#Querying weather API
+# Querying weather API
 @app.get("/weather/{city}")
 async def get_weather(city: str):
     return weatherAPI.getCurrentWeather(city)
+
+@app.get("/weather/")  # default to Paris
+async def get_weather_empty():
+    return weatherAPI.getCurrentWeather("Paris")
 
