@@ -4,6 +4,7 @@ import CityInfo from "./CityInfo";
 import CityForm from "./CityForm";
 
 const fetchWeatherFromApi = async (city, setShowError, setWeather) => {
+  setWeather(null); //Clear weather data to activate loading screen
   setShowError(false);
 
   try {
@@ -28,8 +29,6 @@ const fetchWeatherFromApi = async (city, setShowError, setWeather) => {
 const useWeather = (city, setWeather, setShowError, weatherApiSaved) => {
   //Getting weather from API or local storage
   useEffect(() => {
-    setWeather(null); //Clear weather data to activate loading screen
-
     //Check local storage first
     const savedWeather = localStorage.getItem("weather");
     if (weatherApiSaved && savedWeather) {
