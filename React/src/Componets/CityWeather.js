@@ -26,14 +26,21 @@ const fetchWeatherFromApi = async (city, setShowError, setWeather) => {
   }
 };
 
-const useWeather = (city, setWeather, setShowError, weatherApiSaved) => {
+const useWeather = (
+  city,
+  setWeather,
+  setShowError,
+  weatherApiSaved,
+  weather
+) => {
   //Getting weather from API or local storage
   useEffect(() => {
     //Check local storage first
     const savedWeather = localStorage.getItem("weather");
+    console.log("savedWeather: ", savedWeather);
     if (weatherApiSaved && savedWeather) {
       const parsedWeather = JSON.parse(savedWeather);
-      console.log(parsedWeather);
+      console.log("parsed weather", parsedWeather);
       if (
         //Make sure local storage is not an error
         !parsedWeather.error &&
@@ -58,7 +65,7 @@ const CityWeather = () => {
   const [showError, setShowError] = useState(false);
 
   //Custom hook to fetch weather data
-  useWeather(city, setWeather, setShowError, false); //false: saves weather data in local host rather than calling the api again. For optimisation purposes.
+  useWeather(city, setWeather, setShowError, true, weather); //true: saves weather data in local host rather than calling the api again. For optimisation purposes.
 
   return (
     <div>

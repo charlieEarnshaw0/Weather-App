@@ -32,4 +32,4 @@ def getCurrentWeather(city):
         return output
     except Exception as e:
         output = {"error": str(e)}
-        print(output)
+        print("EXCEPTION: ", output)
