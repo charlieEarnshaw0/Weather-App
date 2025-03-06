@@ -19,12 +19,7 @@ const DisplayWeather = ({ input }) => {
   if (loading) {
     return <h1>Loading...</h1>;
   } else if (weather && weather.error) {
-    return (
-      <h1 style={{ color: "red" }}>
-        {console.log(weather)}
-        ERROR: {weather.error.message}
-      </h1>
-    );
+    return <h1 style={{ color: "red" }}>ERROR: {weather.error.message}</h1>;
 
     //Display weather data
   } else if (weather && weather.location) {
