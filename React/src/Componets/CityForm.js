@@ -5,7 +5,6 @@ const CityForm = ({ city, setCity }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Country submitted:", cityInput);
     setCity(cityInput); //Only set city on submission
   };
 
