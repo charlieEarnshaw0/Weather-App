@@ -16,7 +16,6 @@ const WeatherMap = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setCoords(`${inputCoords[0]},${inputCoords[1]}`);
-    //setCoords("47.987029131374335,1.9808378637290196");
   };
 
   //Get coords from map click
