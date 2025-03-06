@@ -3,25 +3,30 @@ import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "../Styles/WeatherMap.css";
 import CityInfo from "./CityInfo";
-import { fetchWeatherFromApi } from "./CityWeather";
+import DisplayWeather from "./DisplayWeather";
+import FetchWeather from "./FetchWeather";
 
 const WeatherMap = () => {
-  const [coords, setCoords] = useState([null, null]); //two tupple
+  //Default coords
 
-  //fetch weather from api on submit
-  const [weather, setWeather] = useState(null);
-  const [showError, setShowError] = useState(false);
+  const [inputCoords, setInputCoords] = useState([null, null]); //two tupple to strore lat and long
+  const [coords, setCoords] = useState(""); //Will be a two tupple, empty as default
+
+  //on submit, update coords hook
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    fetchWeatherFromApi(`${coords[0]},${coords[1]}`, setShowError, setWeather);
+    setCoords(`${inputCoords[0]},${inputCoords[1]}`);
+    //setCoords("47.987029131374335,1.9808378637290196");
   };
 
-  //Get coords
+  //Get coords from map click
   const GetCoords = () => {
     useMapEvents({
       click: (event) => {
-        setCoords([parseFloat(event.latlng.lat), parseFloat(event.latlng.lng)]);
+        setInputCoords([
+          parseFloat(event.latlng.lat),
+          parseFloat(event.latlng.lng),
+        ]);
       },
     });
     return null;
@@ -44,13 +49,13 @@ const WeatherMap = () => {
         </MapContainer>
         <div>
           <h1>Weather Info</h1>
-          <CityInfo weather={weather} showError={showError} />
+          <DisplayWeather input={coords} />
         </div>
       </div>
       <h2>Coords</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" value={coords[0]} />
-        <input type="text" value={coords[1]} />
+        <input type="text" value={inputCoords[0]} />
+        <input type="text" value={inputCoords[1]} />
         <button type="submit">Submit</button>
       </form>
     </div>
