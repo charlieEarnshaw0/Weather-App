@@ -38,7 +38,7 @@ const FetchWeather = async (input, weatherApiSaved) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching weather data from API:", error);
-    return { error: error.message || "Something went wrong" };
+    return { error: error || "Something went wrong" };
   }
 };
 
